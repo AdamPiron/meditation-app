@@ -54,6 +54,8 @@
     countdownNum: document.getElementById('countdown-num'),
     bgPhotos: Array.from(document.querySelectorAll('.bg-photo')),
     bgVideo: document.getElementById('bg-video'),
+    videoTapBtn: document.getElementById('video-tap-btn'),
+    videoTapLabel: document.getElementById('video-tap-label'),
     pauseBtn: document.getElementById('pause-btn'),
     stopBtn: document.getElementById('stop-btn'),
     progressFill: document.getElementById('progress-fill'),
@@ -368,6 +370,8 @@
   function renderBackgrounds() {
     const hasVideo = hasBgVideo();
     els.bgVideo.hidden = !hasVideo;
+    els.videoTapBtn.hidden = !hasVideo;
+    if (!hasVideo) setVideoTapEnabled(false);
     els.bgPhotos.forEach((img) => { img.hidden = hasVideo; });
     if (hasVideo) return;
     els.bgPhotos.forEach((img, i) => {
@@ -375,6 +379,19 @@
       img.classList.toggle('active', i === state.bgIndex);
     });
   }
+
+  // Lets a user click straight through to the underlying YouTube iframe (e.g.
+  // to hit the native "Skip Ad" button) -- off by default so the video stays
+  // a non-interactive background and taps go to the app's own controls.
+  function setVideoTapEnabled(enabled) {
+    els.bgVideo.classList.toggle('tap-enabled', enabled);
+    els.videoTapBtn.setAttribute('aria-pressed', String(enabled));
+    els.videoTapLabel.textContent = enabled ? 'Tap video: on' : 'Tap video';
+  }
+
+  els.videoTapBtn.addEventListener('click', () => {
+    setVideoTapEnabled(!els.bgVideo.classList.contains('tap-enabled'));
+  });
 
   function advanceBgIndex() {
     if (hasBgVideo()) return;

@@ -450,6 +450,10 @@ button {
   pointer-events: none;
 }
 
+.bg-video.tap-enabled iframe {
+  pointer-events: auto;
+}
+
 .bg-overlay {
   position: absolute;
   inset: 0;
@@ -464,6 +468,26 @@ button {
   display: flex;
   gap: 10px;
   z-index: 2;
+}
+
+.btn-video-tap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  backdrop-filter: blur(6px);
+}
+
+.btn-video-tap[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: transparent;
 }
 
 .btn-stop {
