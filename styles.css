@@ -54,9 +54,11 @@ button {
 
 .screen-landing {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 40px;
   background: var(--bg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .btn-contribute {
