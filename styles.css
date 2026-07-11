@@ -1,0 +1,582 @@
+:root {
+  --bg: oklch(96% 0.012 70);
+  --text: oklch(28% 0.02 50);
+  --text-muted: oklch(28% 0.02 50 / 0.55);
+  --accent: oklch(62% 0.09 45);
+  --accent-text: oklch(98% 0.01 70);
+  --border: oklch(28% 0.02 50 / 0.14);
+  --card-bg: oklch(28% 0.02 50 / 0.05);
+
+  --tint-forest: oklch(52% 0.09 150);
+  --tint-sea: oklch(56% 0.08 230);
+  --tint-fireplace: oklch(60% 0.13 40);
+  --tint-tropical: oklch(70% 0.13 85);
+  --tint-canadian-forest: oklch(52% 0.07 195);
+  --tint-british-library: oklch(55% 0.1 55);
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ===================== Screens ===================== */
+
+.screen {
+  position: fixed;
+  inset: 0;
+  display: none;
+}
+
+.screen.is-active {
+  display: flex;
+}
+
+/* ===================== Landing ===================== */
+
+.screen-landing {
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: var(--bg);
+}
+
+.btn-contribute {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 5;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px oklch(28% 0.02 50 / 0.08);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.btn-contribute:hover {
+  box-shadow: 0 4px 14px oklch(28% 0.02 50 / 0.14);
+  transform: translateY(-1px);
+}
+
+.landing-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
+
+.section-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.chip {
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chip.is-selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.switch-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.switch-label.is-active {
+  color: var(--text);
+}
+
+.switch {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: oklch(28% 0.02 50 / 0.22);
+  border: none;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.switch[aria-checked="true"] {
+  background: var(--accent);
+}
+
+.switch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px oklch(28% 0.02 50 / 0.35);
+  transition: transform 0.15s ease;
+}
+
+.switch[aria-checked="true"] .switch-knob {
+  transform: translateX(20px);
+}
+
+.stepper-row {
+  display: flex;
+  gap: 28px;
+  margin-top: 8px;
+}
+
+.stepper-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepper-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepper-value {
+  font-size: 32px;
+  font-weight: 600;
+  min-width: 48px;
+  text-align: center;
+}
+
+.stepper-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sound-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sound-card {
+  width: 120px;
+  padding: 22px 12px 16px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1.5px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  transition: border-color 0.15s ease;
+}
+
+.sound-card.is-selected {
+  border-color: var(--accent);
+}
+
+.sound-icon {
+  width: 56px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Forest icon */
+.icon-forest .tri {
+  position: absolute;
+  bottom: 4px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 24px solid var(--tint-forest);
+}
+.icon-forest .trunk {
+  position: absolute;
+  bottom: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--tint-forest);
+  opacity: 0.6;
+}
+
+/* Sea icon */
+.icon-sea {
+  flex-direction: column;
+  gap: 5px;
+}
+.icon-sea .wave {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--tint-sea);
+}
+.icon-sea .wave-1 { width: 34px; opacity: 0.9; }
+.icon-sea .wave-2 { width: 26px; opacity: 0.6; }
+.icon-sea .wave-3 { width: 18px; opacity: 0.35; }
+
+/* Fireplace icon */
+.icon-fireplace .flame {
+  width: 20px;
+  height: 26px;
+  background: var(--tint-fireplace);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-135deg);
+}
+
+/* Tropical Beach icon */
+.icon-tropical {
+  flex-direction: column;
+  gap: 6px;
+}
+.icon-tropical .sun {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--tint-tropical);
+}
+.icon-tropical .beach-wave {
+  width: 30px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--tint-tropical);
+  opacity: 0.6;
+}
+
+/* Canadian Forest icon (reuses the forest shape with a cooler tint) */
+.icon-canadian-forest .tri { border-bottom-color: var(--tint-canadian-forest); }
+.icon-canadian-forest .trunk { background: var(--tint-canadian-forest); }
+
+/* British Library icon */
+.icon-british-library {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 3px;
+}
+.icon-british-library .book {
+  width: 8px;
+  height: 24px;
+  background: var(--tint-british-library);
+  border-radius: 2px 2px 0 0;
+}
+.icon-british-library .book-2 {
+  width: 8px;
+  height: 30px;
+  opacity: 0.7;
+}
+
+.sound-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.start-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-start {
+  padding: 18px 64px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* ===================== Countdown ===================== */
+
+.screen-countdown {
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.countdown-num {
+  font-size: 180px;
+  font-weight: 300;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.countdown-num.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ===================== Session ===================== */
+
+.screen-session {
+  background: #000;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.bg-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.bg-photo.active {
+  opacity: 1;
+}
+
+/* Placeholder look for missing photos */
+.bg-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.bg-photo.placeholder.sound-forest { background: linear-gradient(160deg, oklch(38% 0.05 150), oklch(22% 0.03 150)); }
+.bg-photo.placeholder.sound-sea { background: linear-gradient(160deg, oklch(40% 0.05 230), oklch(20% 0.03 230)); }
+.bg-photo.placeholder.sound-fireplace { background: linear-gradient(160deg, oklch(38% 0.07 40), oklch(20% 0.03 40)); }
+.bg-photo.placeholder.sound-tropical-beach { background: linear-gradient(160deg, oklch(42% 0.07 85), oklch(20% 0.03 200)); }
+.bg-photo.placeholder.sound-canadian-forest { background: linear-gradient(160deg, oklch(38% 0.05 150), oklch(22% 0.03 150)); }
+.bg-photo.placeholder.sound-british-library { background: linear-gradient(160deg, oklch(36% 0.06 55), oklch(20% 0.03 55)); }
+
+.bg-video {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.bg-video iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Sized to 105% of a true cover-fit (16:9 box scaled to fill the viewport)
+     so a few % of the video is always cropped off every edge. Baked into the
+     layout width/height (not a transform: scale()) because Safari can clip a
+     scaled iframe's paint to its pre-transform box, silently undoing a scale-
+     based overscan and leaving a sliver of the iframe's own background
+     showing through on one side. */
+  width: 105vw;
+  height: 59.0625vw; /* 16:9 * 1.05 */
+  min-height: 105vh;
+  min-width: 186.67vh; /* 16:9 * 1.05 */
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.28) 100%);
+}
+
+.session-controls {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.btn-stop {
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-text);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+.progress-row {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+}
+
+.btn-playpause {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+}
+
+.btn-playpause .icon-play { display: none; }
+.btn-playpause.is-paused .icon-pause { display: none; }
+.btn-playpause.is-paused .icon-play { display: block; }
+
+.progress-track {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.18);
+  pointer-events: none;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 1s linear;
+}
+
+/* Stop confirmation modal */
+
+.modal-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.modal-card {
+  background: var(--bg);
+  border-radius: 18px;
+  padding: 32px 36px;
+  max-width: 320px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.modal-heading {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.modal-subtext {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-pill {
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+}
+
+.btn-filled {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}

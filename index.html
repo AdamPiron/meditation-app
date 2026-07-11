@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meditation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===================== LANDING SCREEN ===================== -->
+<section id="screen-landing" class="screen screen-landing" aria-hidden="false">
+  <a class="btn-contribute" id="contribute-btn" href="https://donate.stripe.com/fZu5kFbnBex0cYC8UG9Ve02" target="_blank" rel="noopener">If you liked the project, buy me a coffee ! ☕️</a>
+  <div class="landing-col">
+
+    <div class="section">
+      <div class="section-label">Duration</div>
+      <div class="chip-row" id="duration-chips">
+        <button class="chip" data-duration="5" type="button">5 min</button>
+        <button class="chip" data-duration="10" type="button">10 min</button>
+        <button class="chip" data-duration="20" type="button">20 min</button>
+        <button class="chip" data-duration="custom" type="button">Custom</button>
+      </div>
+
+      <div class="stepper-row" id="custom-stepper" hidden>
+        <div class="stepper-col">
+          <button class="stepper-btn" id="hours-inc" type="button" aria-label="Increase hours">+</button>
+          <div class="stepper-value tabular" id="hours-value">0</div>
+          <button class="stepper-btn" id="hours-dec" type="button" aria-label="Decrease hours">–</button>
+          <div class="stepper-label">hours</div>
+        </div>
+        <div class="stepper-col">
+          <button class="stepper-btn" id="minutes-inc" type="button" aria-label="Increase minutes">+</button>
+          <div class="stepper-value tabular" id="minutes-value">10</div>
+          <button class="stepper-btn" id="minutes-dec" type="button" aria-label="Decrease minutes">–</button>
+          <div class="stepper-label">minutes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Ambience</div>
+      <div class="sound-row" id="sound-cards">
+        <button class="sound-card" data-sound="forest" type="button">
+          <span class="sound-icon icon-forest" aria-hidden="true">
+            <span class="tri"></span>
+            <span class="trunk"></span>
+          </span>
+          <span class="sound-name">Meadow</span>
+        </button>
+        <button class="sound-card" data-sound="sea" type="button">
+          <span class="sound-icon icon-sea" aria-hidden="true">
+            <span class="wave wave-1"></span>
+            <span class="wave wave-2"></span>
+            <span class="wave wave-3"></span>
+          </span>
+          <span class="sound-name">Sunrise beach</span>
+        </button>
+        <button class="sound-card" data-sound="fireplace" type="button">
+          <span class="sound-icon icon-fireplace" aria-hidden="true">
+            <span class="flame"></span>
+          </span>
+          <span class="sound-name">Real fireplace</span>
+        </button>
+        <button class="sound-card" data-sound="canadian-forest" type="button">
+          <span class="sound-icon icon-forest icon-canadian-forest" aria-hidden="true">
+            <span class="tri"></span>
+            <span class="trunk"></span>
+          </span>
+          <span class="sound-name">Canadian Forest</span>
+        </button>
+        <button class="sound-card" data-sound="tropical-beach" type="button">
+          <span class="sound-icon icon-tropical" aria-hidden="true">
+            <span class="sun"></span>
+            <span class="beach-wave"></span>
+          </span>
+          <span class="sound-name">Tropical Beach</span>
+        </button>
+        <button class="sound-card" data-sound="british-library" type="button">
+          <span class="sound-icon icon-british-library" aria-hidden="true">
+            <span class="book"></span>
+            <span class="book book-2"></span>
+          </span>
+          <span class="sound-name">British Library</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Background</div>
+      <div class="switch-row">
+        <span class="switch-label" id="video-label-off">No video</span>
+        <button class="switch" id="video-toggle" type="button" role="switch" aria-checked="false" aria-labelledby="video-label-off video-label-on">
+          <span class="switch-knob"></span>
+        </button>
+        <span class="switch-label" id="video-label-on">Video</span>
+      </div>
+    </div>
+
+    <div class="start-col">
+      <button class="btn-start" id="start-btn" type="button">Start</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== COUNTDOWN SCREEN ===================== -->
+<section id="screen-countdown" class="screen screen-countdown" aria-hidden="true">
+  <div class="countdown-num" id="countdown-num">3</div>
+</section>
+
+<!-- ===================== SESSION SCREEN ===================== -->
+<section id="screen-session" class="screen screen-session" aria-hidden="true">
+  <div class="bg-layer" id="bg-layer">
+    <img class="bg-photo active" data-slot="0" alt="" />
+    <img class="bg-photo" data-slot="1" alt="" />
+    <img class="bg-photo" data-slot="2" alt="" />
+    <div class="bg-video" id="bg-video" hidden>
+      <div id="yt-player-target"></div>
+    </div>
+  </div>
+  <div class="bg-overlay"></div>
+
+  <div class="session-controls">
+    <button class="btn-stop" id="stop-btn" type="button">Stop</button>
+  </div>
+
+  <div class="progress-row">
+    <button class="btn-playpause" id="pause-btn" type="button" aria-label="Pause">
+      <svg class="icon-pause" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true">
+        <rect x="3" y="2" width="3.5" height="12" rx="1"></rect>
+        <rect x="9.5" y="2" width="3.5" height="12" rx="1"></rect>
+      </svg>
+      <svg class="icon-play" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true">
+        <path d="M4 2.5v11l10-5.5z"></path>
+      </svg>
+    </button>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="modal-scrim" id="stop-scrim" hidden>
+    <div class="modal-card">
+      <div class="modal-heading">End your session?</div>
+      <div class="modal-subtext">Your progress won't be saved.</div>
+      <div class="modal-actions">
+        <button class="btn-pill btn-outline" id="continue-btn" type="button">Continue</button>
+        <button class="btn-pill btn-filled" id="end-btn" type="button">End session</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio-ambient" loop preload="none"></audio>
+  <audio id="audio-breathing" loop preload="none"></audio>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
