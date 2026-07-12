@@ -50,6 +50,7 @@
     videoToggle: document.getElementById('video-toggle'),
     videoLabelOff: document.getElementById('video-label-off'),
     videoLabelOn: document.getElementById('video-label-on'),
+    videoHint: document.getElementById('video-hint'),
     startBtn: document.getElementById('start-btn'),
     countdownNum: document.getElementById('countdown-num'),
     bgPhotos: Array.from(document.querySelectorAll('.bg-photo')),
@@ -338,12 +339,18 @@
 
   // ===================== Landing: video toggle =====================
 
+  const VIDEO_HINTS = {
+    on: "Anchors your focus in the scene. Ideal if you're new to this.",
+    off: 'Allows full relaxation. Let your thoughts wander freely and more deeply.',
+  };
+
   function setVideoMode(mode) {
     state.videoMode = mode;
     const isOn = mode === 'on';
     els.videoToggle.setAttribute('aria-checked', String(isOn));
     els.videoLabelOff.classList.toggle('is-active', !isOn);
     els.videoLabelOn.classList.toggle('is-active', isOn);
+    els.videoHint.textContent = VIDEO_HINTS[mode];
   }
 
   els.videoToggle.addEventListener('click', () => {

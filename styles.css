@@ -157,12 +157,21 @@ button {
   color: var(--text);
 }
 
+.switch-hint {
+  max-width: 260px;
+  margin-top: -6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-align: center;
+}
+
 .switch {
   position: relative;
   width: 48px;
   height: 28px;
   border-radius: 999px;
-  background: oklch(28% 0.02 50 / 0.22);
+  background: var(--tint-sea);
   border: none;
   flex-shrink: 0;
   transition: background 0.15s ease;
@@ -182,10 +191,11 @@ button {
   background: #fff;
   box-shadow: 0 1px 3px oklch(28% 0.02 50 / 0.35);
   transition: transform 0.15s ease;
+  transform: translateX(20px);
 }
 
 .switch[aria-checked="true"] .switch-knob {
-  transform: translateX(20px);
+  transform: translateX(0);
 }
 
 .stepper-row {
@@ -347,9 +357,19 @@ button {
 }
 
 .sound-name {
+  display: block;
   font-size: 14px;
   font-weight: 500;
   color: var(--text);
+  text-align: center;
+}
+
+.sound-tag {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .start-col {

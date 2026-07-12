@@ -42,14 +42,14 @@
     </div>
 
     <div class="section">
-      <div class="section-label">Ambience</div>
+      <div class="section-label">Environment</div>
       <div class="sound-row" id="sound-cards">
         <button class="sound-card" data-sound="forest" type="button">
           <span class="sound-icon icon-forest" aria-hidden="true">
             <span class="tri"></span>
             <span class="trunk"></span>
           </span>
-          <span class="sound-name">Meadow</span>
+          <span class="sound-name">Meadow<span class="sound-tag">AI</span></span>
         </button>
         <button class="sound-card" data-sound="sea" type="button">
           <span class="sound-icon icon-sea" aria-hidden="true">
@@ -57,34 +57,34 @@
             <span class="wave wave-2"></span>
             <span class="wave wave-3"></span>
           </span>
-          <span class="sound-name">Sunrise beach</span>
+          <span class="sound-name">Sunrise beach<span class="sound-tag">Real</span></span>
         </button>
         <button class="sound-card" data-sound="fireplace" type="button">
           <span class="sound-icon icon-fireplace" aria-hidden="true">
             <span class="flame"></span>
           </span>
-          <span class="sound-name">Real fireplace</span>
+          <span class="sound-name">Fireplace<span class="sound-tag">Real</span></span>
         </button>
         <button class="sound-card" data-sound="canadian-forest" type="button">
           <span class="sound-icon icon-forest icon-canadian-forest" aria-hidden="true">
             <span class="tri"></span>
             <span class="trunk"></span>
           </span>
-          <span class="sound-name">Canadian Forest</span>
+          <span class="sound-name">Canadian forest<span class="sound-tag">AI</span></span>
         </button>
         <button class="sound-card" data-sound="tropical-beach" type="button">
           <span class="sound-icon icon-tropical" aria-hidden="true">
             <span class="sun"></span>
             <span class="beach-wave"></span>
           </span>
-          <span class="sound-name">Tropical Beach</span>
+          <span class="sound-name">Tropical beach<span class="sound-tag">Real</span></span>
         </button>
         <button class="sound-card" data-sound="british-library" type="button">
           <span class="sound-icon icon-british-library" aria-hidden="true">
             <span class="book"></span>
             <span class="book book-2"></span>
           </span>
-          <span class="sound-name">British Library</span>
+          <span class="sound-name">British library<span class="sound-tag">AI</span></span>
         </button>
       </div>
     </div>
@@ -92,12 +92,13 @@
     <div class="section">
       <div class="section-label">Background</div>
       <div class="switch-row">
-        <span class="switch-label" id="video-label-off">No video</span>
+        <span class="switch-label" id="video-label-on">Video</span>
         <button class="switch" id="video-toggle" type="button" role="switch" aria-checked="false" aria-labelledby="video-label-off video-label-on">
           <span class="switch-knob"></span>
         </button>
-        <span class="switch-label" id="video-label-on">Video</span>
+        <span class="switch-label" id="video-label-off">No video</span>
       </div>
+      <div class="switch-hint" id="video-hint"></div>
     </div>
 
     <div class="start-col">
