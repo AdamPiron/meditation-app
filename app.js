@@ -73,6 +73,25 @@
   let ambientFadeStarted = false;
   let ambientFadeComplete = false;
 
+  // On mobile browsers, starting the YouTube background video's own audio
+  // can silently steal the shared audio session and pause the other <audio>
+  // elements (this doesn't happen on desktop). `pauseEl` marks pauses we
+  // triggered ourselves so the watchdog below only resumes playback that was
+  // cut off by the OS/browser, not audio we intentionally stopped.
+  const intentionalPauses = new WeakSet();
+  function pauseEl(el) {
+    intentionalPauses.add(el);
+    el.pause();
+  }
+  function watchForInterruption(el) {
+    el.addEventListener('pause', () => {
+      if (intentionalPauses.delete(el)) return;
+      if (state.screen === 'session' && !state.isPaused) el.play().catch(() => {});
+    });
+  }
+  watchForInterruption(els.audioAmbient);
+  watchForInterruption(els.audioBreathing);
+
   // ===================== YouTube video background =====================
 
   const VIDEO_START_TIMEOUT_MS = 20000;
@@ -467,8 +486,8 @@
     if (state.isPaused) return;
     state.isPaused = true;
     clearSessionTimers();
-    els.audioAmbient.pause();
-    els.audioBreathing.pause();
+    pauseEl(els.audioAmbient);
+    pauseEl(els.audioBreathing);
     pauseBgVideo();
     setPauseButtonState(true);
   }
@@ -492,10 +511,10 @@
     if (ambientFadeTimer) { clearInterval(ambientFadeTimer); ambientFadeTimer = null; }
     if (ytStartTimeoutTimer) { clearTimeout(ytStartTimeoutTimer); ytStartTimeoutTimer = null; }
     if (ytStartPollTimer) { clearInterval(ytStartPollTimer); ytStartPollTimer = null; }
-    els.audioAmbient.pause();
+    pauseEl(els.audioAmbient);
     els.audioAmbient.currentTime = 0;
     els.audioAmbient.volume = AMBIENT_VOLUME;
-    els.audioBreathing.pause();
+    pauseEl(els.audioBreathing);
     els.audioBreathing.currentTime = 0;
     stopBgVideo();
   }
@@ -523,7 +542,7 @@
         if (hasVideo) {
           pauseBgVideo();
         } else {
-          els.audioAmbient.pause();
+          pauseEl(els.audioAmbient);
           els.audioAmbient.volume = 0;
         }
       } else if (hasVideo) {
