@@ -53,12 +53,19 @@ button {
 /* ===================== Landing ===================== */
 
 .screen-landing {
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding: 40px;
   background: var(--bg);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 480px) {
+  .screen-landing {
+    padding-top: 88px;
+  }
 }
 
 .btn-contribute {
