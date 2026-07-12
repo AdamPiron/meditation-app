@@ -92,6 +92,20 @@
   watchForInterruption(els.audioAmbient);
   watchForInterruption(els.audioBreathing);
 
+  // When the background video starts playing from a fresh user gesture --
+  // e.g. autoplay was blocked and the visitor tapped the video's own YouTube
+  // play button -- some mobile browsers hand that gesture's audio session to
+  // the video and go on muting our <audio> elements without ever firing a
+  // 'pause' event on them (so the watchdog above can't catch it). Re-assert
+  // our own playback right as the video starts so it reclaims focus.
+  function reclaimAudioFocus() {
+    if (state.screen !== 'session' || state.isPaused) return;
+    els.audioBreathing.play().catch(() => {});
+    if (!hasBgVideo() || isBgVideoMuted()) {
+      els.audioAmbient.play().catch(() => {});
+    }
+  }
+
   // ===================== YouTube video background =====================
 
   const VIDEO_START_TIMEOUT_MS = 20000;
@@ -183,7 +197,10 @@
           },
           onError: handleBgVideoError,
           onStateChange: (e) => {
-            if (e.data === YT.PlayerState.PLAYING) markVideoStarted();
+            if (e.data === YT.PlayerState.PLAYING) {
+              markVideoStarted();
+              reclaimAudioFocus();
+            }
           },
         },
       });
