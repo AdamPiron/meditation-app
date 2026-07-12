@@ -216,6 +216,7 @@
   }
 
   function playBgVideoIfNeeded(sound) {
+    if (state.videoMode !== 'on') return;
     if (state.videoUnavailable) return;
     const videoId = SOUND_VIDEO_IDS[sound];
     if (!videoId) return;
