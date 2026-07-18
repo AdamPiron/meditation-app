@@ -5,7 +5,14 @@
   const PHOTO_INTERVAL_MS = 60 * 1000;
   const AMBIENT_VOLUME = 0.6;
   const BREATHING_VOLUME = 0.4;
-  const AMBIENT_FADE_OUT_SECONDS = 5;
+  // The ambient/video background fades out first, then -- once it's silent --
+  // the breathing pacer fades out on its own, shorter, tail so the two never
+  // fade in lockstep. AMBIENT_FADE_LEAD_SECONDS is when the ambient fade
+  // begins (counting down to session end); it fades over AMBIENT_FADE_DURATION_SECONDS,
+  // and BREATHING_FADE_DURATION_SECONDS is the pacer's own fade at the very end.
+  const AMBIENT_FADE_LEAD_SECONDS = 8;
+  const AMBIENT_FADE_DURATION_SECONDS = 5;
+  const BREATHING_FADE_DURATION_SECONDS = 3;
   const AMBIENT_FADE_STEP_MS = 100;
   const VIDEO_VOLUME = 50; // 0-100, mixed under the cardiac coherence pacer
 
@@ -73,6 +80,9 @@
   let ambientFadeTimer = null;
   let ambientFadeStarted = false;
   let ambientFadeComplete = false;
+  let breathingFadeTimer = null;
+  let breathingFadeStarted = false;
+  let breathingFadeComplete = false;
 
   // On mobile browsers, starting the YouTube background video's own audio
   // can silently steal the shared audio session and pause the other <audio>
@@ -341,7 +351,7 @@
   // ===================== Landing: video toggle =====================
 
   const VIDEO_HINTS = {
-    on: "Anchors your focus in the scene. Ideal if you're new to this.",
+    on: "Ideal if you're new to this. Anchors your focus in the scene.",
     off: 'Allows full relaxation. Let your thoughts wander freely and more deeply.',
   };
 
@@ -457,9 +467,13 @@
     els.progressFill.style.width = `${pct}%`;
 
     const remainingSeconds = totalSeconds - state.elapsedSeconds;
-    if (!ambientFadeStarted && remainingSeconds <= AMBIENT_FADE_OUT_SECONDS) {
+    if (!ambientFadeStarted && remainingSeconds <= AMBIENT_FADE_LEAD_SECONDS) {
       ambientFadeStarted = true;
       fadeOutAmbient();
+    }
+    if (!breathingFadeStarted && remainingSeconds <= BREATHING_FADE_DURATION_SECONDS) {
+      breathingFadeStarted = true;
+      fadeOutBreathing();
     }
 
     if (state.elapsedSeconds >= totalSeconds) {
@@ -481,6 +495,8 @@
     ytVideoStarted = false;
     ambientFadeStarted = false;
     ambientFadeComplete = false;
+    breathingFadeStarted = false;
+    breathingFadeComplete = false;
     els.stopScrim.hidden = true;
     els.progressFill.style.width = '0%';
     setPauseButtonState(false);
@@ -528,12 +544,14 @@
       if (ambientFadeStarted) fadeOutAmbient();
     }
     els.audioBreathing.play().catch(() => {});
+    if (!breathingFadeComplete && breathingFadeStarted) fadeOutBreathing();
 
     startSessionTimers();
   }
 
   function stopAudio() {
     if (ambientFadeTimer) { clearInterval(ambientFadeTimer); ambientFadeTimer = null; }
+    if (breathingFadeTimer) { clearInterval(breathingFadeTimer); breathingFadeTimer = null; }
     if (ytStartTimeoutTimer) { clearTimeout(ytStartTimeoutTimer); ytStartTimeoutTimer = null; }
     if (ytStartPollTimer) { clearInterval(ytStartPollTimer); ytStartPollTimer = null; }
     pauseEl(els.audioAmbient);
@@ -541,26 +559,26 @@
     els.audioAmbient.volume = AMBIENT_VOLUME;
     pauseEl(els.audioBreathing);
     els.audioBreathing.currentTime = 0;
+    els.audioBreathing.volume = BREATHING_VOLUME;
     stopBgVideo();
   }
 
-  // Ambient nature loop (or, for video-backed sounds, the video's own audio)
-  // fades to silence over the final AMBIENT_FADE_OUT_SECONDS of the session,
-  // so it's fully stopped before the session (and the breathing loop) ends.
-  // The breathing loop keeps playing until the end.
+  // The ambient nature loop (or, for video-backed sounds, the video's own
+  // audio) fades to silence first, over AMBIENT_FADE_DURATION_SECONDS. Only
+  // once it's fully quiet does the breathing pacer begin its own fade (see
+  // fadeOutBreathing below), so the background always winds down before the
+  // pacer does rather than the two fading together.
   function fadeOutAmbient() {
     if (ambientFadeTimer) return;
     const hasVideo = hasBgVideo() && !isBgVideoMuted();
-    const startVolume = hasVideo ? VIDEO_VOLUME : els.audioAmbient.volume;
-    if (startVolume <= 0) { ambientFadeComplete = true; return; }
-    const steps = (AMBIENT_FADE_OUT_SECONDS * 1000) / AMBIENT_FADE_STEP_MS;
-    const volumeStep = startVolume / steps;
+    const ambientStart = hasVideo ? VIDEO_VOLUME : els.audioAmbient.volume;
+    const steps = (AMBIENT_FADE_DURATION_SECONDS * 1000) / AMBIENT_FADE_STEP_MS;
     let stepsTaken = 0;
 
     ambientFadeTimer = setInterval(() => {
       stepsTaken += 1;
-      const nextVolume = startVolume - volumeStep * stepsTaken;
-      if (nextVolume <= 0 || stepsTaken >= steps) {
+      const remaining = Math.max(0, 1 - stepsTaken / steps);
+      if (stepsTaken >= steps) {
         clearInterval(ambientFadeTimer);
         ambientFadeTimer = null;
         ambientFadeComplete = true;
@@ -570,11 +588,35 @@
           pauseEl(els.audioAmbient);
           els.audioAmbient.volume = 0;
         }
-      } else if (hasVideo) {
-        if (ytPlayer) ytPlayer.setVolume(Math.round(nextVolume));
-      } else {
-        els.audioAmbient.volume = nextVolume;
+        return;
       }
+      if (hasVideo) {
+        if (ytPlayer) ytPlayer.setVolume(Math.round(ambientStart * remaining));
+      } else {
+        els.audioAmbient.volume = ambientStart * remaining;
+      }
+    }, AMBIENT_FADE_STEP_MS);
+  }
+
+  // Breathing pacer's own fade-out, over the final BREATHING_FADE_DURATION_SECONDS
+  // of the session -- starts after the ambient/video fade has already finished.
+  function fadeOutBreathing() {
+    if (breathingFadeTimer) return;
+    const breathingStart = els.audioBreathing.volume;
+    const steps = (BREATHING_FADE_DURATION_SECONDS * 1000) / AMBIENT_FADE_STEP_MS;
+    let stepsTaken = 0;
+
+    breathingFadeTimer = setInterval(() => {
+      stepsTaken += 1;
+      const remaining = Math.max(0, 1 - stepsTaken / steps);
+      if (stepsTaken >= steps) {
+        clearInterval(breathingFadeTimer);
+        breathingFadeTimer = null;
+        breathingFadeComplete = true;
+        els.audioBreathing.volume = 0;
+        return;
+      }
+      els.audioBreathing.volume = breathingStart * remaining;
     }, AMBIENT_FADE_STEP_MS);
   }
 
@@ -582,6 +624,7 @@
     if (sessionTickTimer) { clearInterval(sessionTickTimer); sessionTickTimer = null; }
     if (photoTimer) { clearInterval(photoTimer); photoTimer = null; }
     if (ambientFadeTimer) { clearInterval(ambientFadeTimer); ambientFadeTimer = null; }
+    if (breathingFadeTimer) { clearInterval(breathingFadeTimer); breathingFadeTimer = null; }
   }
 
   function endSession() {

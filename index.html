@@ -17,31 +17,6 @@
   <div class="landing-col">
 
     <div class="section">
-      <div class="section-label">Duration</div>
-      <div class="chip-row" id="duration-chips">
-        <button class="chip" data-duration="5" type="button">5 min</button>
-        <button class="chip" data-duration="10" type="button">10 min</button>
-        <button class="chip" data-duration="20" type="button">20 min</button>
-        <button class="chip" data-duration="custom" type="button">Custom</button>
-      </div>
-
-      <div class="stepper-row" id="custom-stepper" hidden>
-        <div class="stepper-col">
-          <button class="stepper-btn" id="hours-inc" type="button" aria-label="Increase hours">+</button>
-          <div class="stepper-value tabular" id="hours-value">0</div>
-          <button class="stepper-btn" id="hours-dec" type="button" aria-label="Decrease hours">–</button>
-          <div class="stepper-label">hours</div>
-        </div>
-        <div class="stepper-col">
-          <button class="stepper-btn" id="minutes-inc" type="button" aria-label="Increase minutes">+</button>
-          <div class="stepper-value tabular" id="minutes-value">10</div>
-          <button class="stepper-btn" id="minutes-dec" type="button" aria-label="Decrease minutes">–</button>
-          <div class="stepper-label">minutes</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
       <div class="section-label">Environment</div>
       <div class="sound-row" id="sound-cards">
         <button class="sound-card" data-sound="forest" type="button">
@@ -86,6 +61,31 @@
           </span>
           <span class="sound-name">British library<span class="sound-tag">AI</span></span>
         </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Duration</div>
+      <div class="chip-row" id="duration-chips">
+        <button class="chip" data-duration="5" type="button">5 min</button>
+        <button class="chip" data-duration="10" type="button">10 min</button>
+        <button class="chip" data-duration="20" type="button">20 min</button>
+        <button class="chip" data-duration="custom" type="button">Custom</button>
+      </div>
+
+      <div class="stepper-row" id="custom-stepper" hidden>
+        <div class="stepper-col">
+          <button class="stepper-btn" id="hours-inc" type="button" aria-label="Increase hours">+</button>
+          <div class="stepper-value tabular" id="hours-value">0</div>
+          <button class="stepper-btn" id="hours-dec" type="button" aria-label="Decrease hours">–</button>
+          <div class="stepper-label">hours</div>
+        </div>
+        <div class="stepper-col">
+          <button class="stepper-btn" id="minutes-inc" type="button" aria-label="Increase minutes">+</button>
+          <div class="stepper-value tabular" id="minutes-value">10</div>
+          <button class="stepper-btn" id="minutes-dec" type="button" aria-label="Decrease minutes">–</button>
+          <div class="stepper-label">minutes</div>
+        </div>
       </div>
     </div>
 

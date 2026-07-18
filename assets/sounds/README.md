@@ -24,6 +24,9 @@ This avoids pulling down an entire multi-hour video just to trim it with ffmpeg 
 - **Forest** (`forest`) — https://www.youtube.com/watch?v=ZkEO4RpZM40
   - `forest.mp3`: existing local loop, unchanged.
   - Video mode: full video, YouTube ID `ZkEO4RpZM40`, starts at 0:05 (see `SOUND_VIDEO_START_SECONDS` in `app.js`). This video's own audio is muted (see `SOUND_VIDEO_MUTED` in `app.js`) — the local `forest.mp3` loop plays underneath it instead.
+- **Sunrise beach** (`sea`) — https://www.youtube.com/watch?v=vLSTcAdy1Bk
+  - `sea.mp3`: 0:00–1:00 excerpt.
+  - Video mode: full video, YouTube ID `vLSTcAdy1Bk`.
 - **Real fireplace** (`fireplace`) — https://www.youtube.com/watch?v=36Z9CtcNCvw
   - `fireplace.mp3`: 1:45:00–1:46:00 excerpt.
   - Video mode: full video, YouTube ID `36Z9CtcNCvw`.
