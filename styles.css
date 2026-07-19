@@ -497,6 +497,13 @@ button {
   display: flex;
   gap: 10px;
   z-index: 2;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.screen-session.is-idle .session-controls {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .btn-video-tap {
@@ -539,6 +546,13 @@ button {
   align-items: center;
   gap: 12px;
   z-index: 2;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.screen-session.is-idle .progress-row {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .btn-playpause {

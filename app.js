@@ -84,6 +84,29 @@
   let breathingFadeStarted = false;
   let breathingFadeComplete = false;
 
+  const IDLE_HIDE_DELAY_MS = 3000;
+  let idleHideTimer = null;
+
+  function resetIdleHideTimer() {
+    els.screens.session.classList.remove('is-idle');
+    clearTimeout(idleHideTimer);
+    idleHideTimer = setTimeout(() => {
+      els.screens.session.classList.add('is-idle');
+    }, IDLE_HIDE_DELAY_MS);
+  }
+
+  function startIdleWatcher() {
+    document.addEventListener('mousemove', resetIdleHideTimer);
+    resetIdleHideTimer();
+  }
+
+  function stopIdleWatcher() {
+    document.removeEventListener('mousemove', resetIdleHideTimer);
+    clearTimeout(idleHideTimer);
+    idleHideTimer = null;
+    els.screens.session.classList.remove('is-idle');
+  }
+
   // On mobile browsers, starting the YouTube background video's own audio
   // can silently steal the shared audio session and pause the other <audio>
   // elements (this doesn't happen on desktop). `pauseEl` marks pauses we
@@ -521,6 +544,7 @@
     els.audioBreathing.play().catch(() => {});
 
     startSessionTimers();
+    startIdleWatcher();
   }
 
   function pauseSession() {
@@ -629,6 +653,7 @@
 
   function endSession() {
     clearSessionTimers();
+    stopIdleWatcher();
     stopAudio();
     state.elapsedSeconds = 0;
     state.bgIndex = 0;
