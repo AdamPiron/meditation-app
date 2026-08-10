@@ -5,6 +5,10 @@
   const PHOTO_INTERVAL_MS = 60 * 1000;
   const AMBIENT_VOLUME = 0.6;
   const BREATHING_VOLUME = 0.4;
+  // The pacer loop holds 5 breath cycles in 55.03s, i.e. ~11.0s per inhale/exhale
+  // cycle. Slowing playback by this ratio stretches each cycle to ~11.5s, giving
+  // half a second more per cycle without touching the audio file.
+  const BREATHING_PLAYBACK_RATE = 11.006 / 11.506;
   // The ambient/video background fades out first, then -- once it's silent --
   // the breathing pacer fades out on its own tail so the two never fade in
   // lockstep. AMBIENT_FADE_LEAD_SECONDS is when the ambient fade begins
@@ -556,6 +560,7 @@
 
     els.audioBreathing.src = 'assets/sounds/breathing-pacer.mp3';
     els.audioBreathing.volume = BREATHING_VOLUME;
+    els.audioBreathing.playbackRate = BREATHING_PLAYBACK_RATE;
     els.audioBreathing.currentTime = 0;
     els.audioBreathing.play().catch(() => {});
 
