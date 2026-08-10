@@ -6,13 +6,14 @@
   const AMBIENT_VOLUME = 0.6;
   const BREATHING_VOLUME = 0.4;
   // The ambient/video background fades out first, then -- once it's silent --
-  // the breathing pacer fades out on its own, shorter, tail so the two never
-  // fade in lockstep. AMBIENT_FADE_LEAD_SECONDS is when the ambient fade
-  // begins (counting down to session end); it fades over AMBIENT_FADE_DURATION_SECONDS,
-  // and BREATHING_FADE_DURATION_SECONDS is the pacer's own fade at the very end.
-  const AMBIENT_FADE_LEAD_SECONDS = 8;
-  const AMBIENT_FADE_DURATION_SECONDS = 5;
-  const BREATHING_FADE_DURATION_SECONDS = 3;
+  // the breathing pacer fades out on its own tail so the two never fade in
+  // lockstep. AMBIENT_FADE_LEAD_SECONDS is when the ambient fade begins
+  // (counting down to session end); it fades over AMBIENT_FADE_DURATION_SECONDS
+  // and must finish by the time the pacer's own fade starts, i.e. the lead is
+  // BREATHING_FADE_DURATION_SECONDS + AMBIENT_FADE_DURATION_SECONDS.
+  const BREATHING_FADE_DURATION_SECONDS = 12;
+  const AMBIENT_FADE_DURATION_SECONDS = 8;
+  const AMBIENT_FADE_LEAD_SECONDS = BREATHING_FADE_DURATION_SECONDS + AMBIENT_FADE_DURATION_SECONDS;
   const AMBIENT_FADE_STEP_MS = 100;
   const VIDEO_VOLUME = 50; // 0-100, mixed under the cardiac coherence pacer
 
@@ -76,6 +77,10 @@
 
   let countdownTimer = null;
   let sessionTickTimer = null;
+  // Wall-clock anchors for the session length (see sessionTick).
+  let sessionStartMs = 0;
+  let pausedTotalMs = 0;
+  let pauseStartedMs = 0;
   let photoTimer = null;
   let ambientFadeTimer = null;
   let ambientFadeStarted = false;
@@ -485,7 +490,13 @@
 
   function sessionTick() {
     const totalSeconds = state.durationMinutes * 60;
-    state.elapsedSeconds += 1;
+    // Elapsed time comes from the wall clock rather than a tick count: browsers
+    // throttle timers in background tabs (often to once a minute), which would
+    // otherwise stretch a 10-minute session well past 10 minutes.
+    state.elapsedSeconds = Math.min(
+      totalSeconds,
+      Math.floor((Date.now() - sessionStartMs - pausedTotalMs) / 1000)
+    );
     const pct = Math.min(100, (state.elapsedSeconds / totalSeconds) * 100);
     els.progressFill.style.width = `${pct}%`;
 
@@ -505,11 +516,16 @@
   }
 
   function startSessionTimers() {
-    sessionTickTimer = setInterval(sessionTick, 1000);
+    // Sub-second polling so the session ends close to the exact mark even if a
+    // tick is delayed; the tick itself is idempotent (it reads the clock).
+    sessionTickTimer = setInterval(sessionTick, 250);
     photoTimer = setInterval(advanceBgIndex, PHOTO_INTERVAL_MS);
   }
 
   function startSession() {
+    sessionStartMs = Date.now();
+    pausedTotalMs = 0;
+    pauseStartedMs = 0;
     state.elapsedSeconds = 0;
     state.bgIndex = 0;
     state.showStopConfirm = false;
@@ -550,6 +566,7 @@
   function pauseSession() {
     if (state.isPaused) return;
     state.isPaused = true;
+    pauseStartedMs = Date.now();
     clearSessionTimers();
     pauseEl(els.audioAmbient);
     pauseEl(els.audioBreathing);
@@ -560,6 +577,10 @@
   function resumeSession() {
     if (!state.isPaused) return;
     state.isPaused = false;
+    if (pauseStartedMs) {
+      pausedTotalMs += Date.now() - pauseStartedMs;
+      pauseStartedMs = 0;
+    }
     setPauseButtonState(false);
 
     if (!ambientFadeComplete) {
@@ -614,18 +635,29 @@
         }
         return;
       }
+      const level = ambientStart * fadeCurve(remaining);
       if (hasVideo) {
-        if (ytPlayer) ytPlayer.setVolume(Math.round(ambientStart * remaining));
+        if (ytPlayer) ytPlayer.setVolume(Math.round(level));
       } else {
-        els.audioAmbient.volume = ambientStart * remaining;
+        els.audioAmbient.volume = level;
       }
     }, AMBIENT_FADE_STEP_MS);
+  }
+
+  // Eases a 1 -> 0 fade so it neither drops the moment it starts nor arrives at
+  // silence on a hard edge -- a raised cosine is flat at both ends, so the last
+  // seconds taper away instead of stopping. Steeper curves (squaring this one)
+  // hit silence well before the fade is over and waste the tail.
+  function fadeCurve(remaining) {
+    return (1 - Math.cos(Math.PI * remaining)) / 2;
   }
 
   // Breathing pacer's own fade-out, over the final BREATHING_FADE_DURATION_SECONDS
   // of the session -- starts after the ambient/video fade has already finished.
   function fadeOutBreathing() {
     if (breathingFadeTimer) return;
+    // Resume mid-fade restarts from the volume left behind, so rescale the
+    // curve to that level instead of jumping back up to the full volume.
     const breathingStart = els.audioBreathing.volume;
     const steps = (BREATHING_FADE_DURATION_SECONDS * 1000) / AMBIENT_FADE_STEP_MS;
     let stepsTaken = 0;
@@ -640,7 +672,7 @@
         els.audioBreathing.volume = 0;
         return;
       }
-      els.audioBreathing.volume = breathingStart * remaining;
+      els.audioBreathing.volume = breathingStart * fadeCurve(remaining);
     }, AMBIENT_FADE_STEP_MS);
   }
 
