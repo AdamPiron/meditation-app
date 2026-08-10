@@ -6,9 +6,9 @@
   const AMBIENT_VOLUME = 0.6;
   const BREATHING_VOLUME = 0.4;
   // The pacer loop holds 5 breath cycles in 55.03s, i.e. ~11.0s per inhale/exhale
-  // cycle. Slowing playback by this ratio stretches each cycle to ~11.5s, giving
-  // half a second more per cycle without touching the audio file.
-  const BREATHING_PLAYBACK_RATE = 11.006 / 11.506;
+  // cycle. Slowing playback by this ratio stretches each cycle to ~12.0s, giving
+  // a full second more per cycle without touching the audio file.
+  const BREATHING_PLAYBACK_RATE = 11.006 / 12.006;
   // The ambient/video background fades out first, then -- once it's silent --
   // the breathing pacer fades out on its own tail so the two never fade in
   // lockstep. AMBIENT_FADE_LEAD_SECONDS is when the ambient fade begins
