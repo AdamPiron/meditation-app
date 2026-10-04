@@ -11,7 +11,7 @@ A side project born out of the limits of the Petit Bambou app. I built it on a F
 I use it every single day:
 
 - 🌾 **5 min of "Meadow" right before a Deep Work session**: a great little dopamine detox that helps me unlock real focus
-- 📚 **10 min of "British library" every night**: my way to reflect on the day, process emotions, step out of the noise and switch to sleep mode in minutes
+- 📚 **10 min of "British library" every night**: my way to reflect on the day, step out of the noise and switch to sleep mode in minutes
 
 ## ✨ Features
 
