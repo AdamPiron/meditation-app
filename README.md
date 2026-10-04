@@ -4,6 +4,15 @@ A tiny, beautiful meditation timer that lives in your browser. 🌿 Pick a place
 
 ### 👉 [Try it live](https://adampiron.github.io/meditation-app/)
 
+## 💛 Why I built it
+
+A side project born out of the limits of the Petit Bambou app. I built it on a Friday night, and it now saves me the 10€/month subscription. 😄
+
+I use it every single day:
+
+- 🌾 **5 min of "Meadow" right before a Deep Work session**: a great little dopamine detox that helps me unlock real focus
+- 📚 **10 min of "British library" every night**: my way to reflect on the day, process emotions, step out of the noise and switch to sleep mode in minutes
+
 ## ✨ Features
 
 - 🌍 **6 environments**: Meadow, Sunrise beach, Fireplace, Canadian forest, Tropical beach, British library
